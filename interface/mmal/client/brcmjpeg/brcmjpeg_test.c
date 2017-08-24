@@ -183,7 +183,7 @@ int main(int argc, char **argv)
                 break;
             }
 
-            fprintf(stderr, "decoded %ix%i(%ix%i), %i bytes in %lldus\n",
+            fprintf(stderr, "decoded %ix%i(%ix%i), %i bytes in %ldus\n",
                     dec_request.width, dec_request.height,
                     dec_request.buffer_width, dec_request.buffer_height,
                     dec_request.input_size, stop - start);
@@ -203,7 +203,7 @@ int main(int argc, char **argv)
                 break;
             }
 
-            fprintf(stderr, "encoded %ix%i(%ix%i), %i bytes in %lldus\n",
+            fprintf(stderr, "encoded %ix%i(%ix%i), %i bytes in %ldus\n",
                     enc_request.width, enc_request.height,
                     enc_request.buffer_width, enc_request.buffer_height,
                     enc_request.output_size, stop - start);
@@ -217,9 +217,9 @@ int main(int argc, char **argv)
         fclose(file_out);
         fclose(file_in);
 
-        fprintf(stderr, "decode times %lldus (%lldus per run)\n",
+        fprintf(stderr, "decode times %ldus (%ldus per run)\n",
                 time_dec, time_dec / count);
-        fprintf(stderr, "encode times %lldus (%lldus per run)\n",
+        fprintf(stderr, "encode times %ldus (%ldus per run)\n",
                 time_enc, time_enc / count);
     }
 

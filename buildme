@@ -19,9 +19,9 @@ if [ "armv6l" = `arch` ] || [ "armv7l" = `arch` ]; then
 		make -j4
 	fi
 	if [ "$1" != "" ]; then
-		sudo make install DESTDIR=$1
+		make install DESTDIR=$1
 	else
-		sudo make install
+		make install
 	fi
 elif [ "$1" = "--native" ]; then
 	# Build natively on the host
@@ -35,10 +35,10 @@ else
 	mkdir -p build/arm-linux/$BUILDSUBDIR
 	pushd build/arm-linux/$BUILDSUBDIR
 	cmake -DCMAKE_TOOLCHAIN_FILE=../../../makefiles/cmake/toolchains/arm-linux-gnueabihf.cmake -DCMAKE_BUILD_TYPE=$BUILDTYPE ../../..
-	make -j `nproc`
+	make -j1
 
 	if [ "$1" != "" ]; then
-		sudo make install DESTDIR=$1
+		make install DESTDIR=$1
 	fi
 fi
 popd

@@ -94,7 +94,7 @@ RETURNS
 int32_t vc_gpuserv_init( void )
 {
    VCHIQ_SERVICE_PARAMS_T vchiq_params;
-   VCOS_STATUS_T status = VCOS_ENXIO;
+//   VCOS_STATUS_T status = VCOS_ENXIO;
    VCHIQ_STATUS_T vchiq_status;
 
    vcos_once(&gpuserv_client_once, init_once);
