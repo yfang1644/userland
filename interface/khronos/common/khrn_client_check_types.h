@@ -38,17 +38,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    egl types
 */
 
+#define PTRSIZE  4  // pointer size: 4@arm32, 8@arm64
+
 vcos_static_assert(sizeof(EGLint) == 4);
 vcos_static_assert(sizeof(EGLBoolean) == 4);
 vcos_static_assert(sizeof(EGLenum) == 4);
-vcos_static_assert(sizeof(EGLConfig) == 4);
-vcos_static_assert(sizeof(EGLContext) == 4);
-vcos_static_assert(sizeof(EGLDisplay) == 4);
-vcos_static_assert(sizeof(EGLSurface) == 4);
-vcos_static_assert(sizeof(EGLClientBuffer) == 4);
-vcos_static_assert(sizeof(NativeDisplayType) == 4);
-vcos_static_assert(sizeof(NativePixmapType) == 4);
-vcos_static_assert(sizeof(NativeWindowType) == 4);
+vcos_static_assert(sizeof(EGLConfig) == PTRSIZE);
+vcos_static_assert(sizeof(EGLContext) == PTRSIZE);
+vcos_static_assert(sizeof(EGLDisplay) == PTRSIZE);
+vcos_static_assert(sizeof(EGLSurface) == PTRSIZE);
+vcos_static_assert(sizeof(EGLClientBuffer) == PTRSIZE);
+vcos_static_assert(sizeof(NativeDisplayType) == PTRSIZE);
+vcos_static_assert(sizeof(NativePixmapType) == PTRSIZE);
+vcos_static_assert(sizeof(NativeWindowType) == PTRSIZE);
 
 /*
    gl types
@@ -68,8 +70,8 @@ vcos_static_assert(sizeof(GLfloat) == 4);
 vcos_static_assert(sizeof(GLclampf) == 4);
 vcos_static_assert(sizeof(GLfixed) == 4);
 vcos_static_assert(sizeof(GLclampx) == 4);
-vcos_static_assert(sizeof(GLintptr) == 4);
-vcos_static_assert(sizeof(GLsizeiptr) == 4);
+vcos_static_assert(sizeof(GLintptr) == PTRSIZE);
+vcos_static_assert(sizeof(GLsizeiptr) == PTRSIZE);
 
 /*
    vg types
