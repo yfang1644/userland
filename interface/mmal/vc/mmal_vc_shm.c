@@ -176,8 +176,8 @@ uint8_t *mmal_vc_shm_alloc(uint32_t size)
    vcsm_unlock_hdl(vcsm_handle);
 
    payload_elem->mem = mem;
-   payload_elem->handle = (void *)(uintptr_t)vcsm_handle;
-   payload_elem->vc_handle = (void *)(uintptr_t)vc_handle;
+   payload_elem->handle = (void *)vcsm_handle;
+   payload_elem->vc_handle = (void *)vc_handle;
 #else /* ENABLE_MMAL_VCSM */
    MMAL_PARAM_UNUSED(size);
    mmal_vc_payload_list_release(payload_elem);

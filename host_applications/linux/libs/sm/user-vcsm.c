@@ -746,7 +746,7 @@ void *vcsm_usr_address( unsigned int handle )
                       map.handle,
                       map.addr );
 
-      return (void*)(uintptr_t)map.addr;
+      return (void*)map.addr;
    }
 }
 
@@ -883,7 +883,7 @@ void *vcsm_lock( unsigned int handle )
       goto out;
    }
 
-   usr_ptr = (void *)(uintptr_t)lock_unlock.addr;
+   usr_ptr = (void *)lock_unlock.addr;
 
    /* If applicable, invalidate the cache now.
    */
@@ -1045,7 +1045,7 @@ void *vcsm_lock_cache( unsigned int handle,
    */
    if ( chk.addr && chk.size )
    {
-      munmap( (void *)(uintptr_t)chk.addr, chk.size );
+      munmap( (void *)chk.addr, chk.size );
 
       vcos_log_trace( "[%s]: [%d]: ioctl unmap hdl: %x",
                       __func__,
