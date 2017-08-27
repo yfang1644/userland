@@ -186,7 +186,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "decoded %ix%i(%ix%i), %i bytes in %ldus\n",
                     dec_request.width, dec_request.height,
                     dec_request.buffer_width, dec_request.buffer_height,
-                    dec_request.input_size, stop - start);
+                    dec_request.input_size, (long)(stop - start));
             time_dec += stop - start;
 
             enc_request.input_size = dec_request.output_size;
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "encoded %ix%i(%ix%i), %i bytes in %ldus\n",
                     enc_request.width, enc_request.height,
                     enc_request.buffer_width, enc_request.buffer_height,
-                    enc_request.output_size, stop - start);
+                    enc_request.output_size, (long)(stop - start));
             time_enc += stop - start;
         }
 
@@ -218,9 +218,9 @@ int main(int argc, char **argv)
         fclose(file_in);
 
         fprintf(stderr, "decode times %ldus (%ldus per run)\n",
-                time_dec, time_dec / count);
+                (long)time_dec, (long)time_dec / count);
         fprintf(stderr, "encode times %ldus (%ldus per run)\n",
-                time_enc, time_enc / count);
+                (long)time_enc, (long)time_enc / count);
     }
 
     brcmjpeg_release(dec);
