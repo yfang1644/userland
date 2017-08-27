@@ -154,12 +154,12 @@ uint8_t *mmal_vc_shm_alloc(uint32_t size)
    }
 
 #ifdef ENABLE_MMAL_VCSM
-   unsigned int vcsm_handle = vcsm_malloc_cache(size, VCSM_CACHE_TYPE_HOST, "mmal_vc_port buffer");
-   unsigned int vc_handle = vcsm_vc_hdl_from_hdl(vcsm_handle);
+   unsigned long vcsm_handle = vcsm_malloc_cache(size, VCSM_CACHE_TYPE_HOST, "mmal_vc_port buffer");
+   unsigned long vc_handle = vcsm_vc_hdl_from_hdl(vcsm_handle);
    mem = (uint8_t *)vcsm_lock( vcsm_handle );
    if (!mem || !vc_handle)
    {
-      LOG_ERROR("could not allocate %i bytes of shared memory (handle %x)",
+      LOG_ERROR("could not allocate %i bytes of shared memory (handle %lx)",
                 (int)size, vcsm_handle);
       if (mem)
          vcsm_unlock_hdl(vcsm_handle);
@@ -176,8 +176,8 @@ uint8_t *mmal_vc_shm_alloc(uint32_t size)
    vcsm_unlock_hdl(vcsm_handle);
 
    payload_elem->mem = mem;
-   payload_elem->handle = (void *)(uintptr_t)vcsm_handle;
-   payload_elem->vc_handle = (void *)(uintptr_t)vc_handle;
+   payload_elem->handle = (void *)vcsm_handle;
+   payload_elem->vc_handle = (void *)vc_handle;
 #else /* ENABLE_MMAL_VCSM */
    MMAL_PARAM_UNUSED(size);
    mmal_vc_payload_list_release(payload_elem);

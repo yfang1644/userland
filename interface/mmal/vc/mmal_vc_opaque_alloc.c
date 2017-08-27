@@ -53,7 +53,7 @@ MMAL_OPAQUE_IMAGE_HANDLE_T mmal_vc_opaque_alloc(void)
    return mmal_vc_opaque_alloc_desc("?");
 }
 
-MMAL_STATUS_T mmal_vc_opaque_acquire(unsigned int handle)
+MMAL_STATUS_T mmal_vc_opaque_acquire(MMAL_OPAQUE_IMAGE_HANDLE_T handle)
 {
    MMAL_STATUS_T ret;
    mmal_worker_opaque_allocator msg;
@@ -69,7 +69,7 @@ MMAL_STATUS_T mmal_vc_opaque_acquire(unsigned int handle)
    return ret;
 }
 
-MMAL_STATUS_T mmal_vc_opaque_release(unsigned int handle)
+MMAL_STATUS_T mmal_vc_opaque_release(MMAL_OPAQUE_IMAGE_HANDLE_T handle)
 {
    MMAL_STATUS_T ret;
    mmal_worker_opaque_allocator msg;

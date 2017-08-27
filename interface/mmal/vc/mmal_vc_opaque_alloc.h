@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 extern "C" {
 #endif
 
-typedef uint32_t MMAL_OPAQUE_IMAGE_HANDLE_T;
+typedef uint64_t MMAL_OPAQUE_IMAGE_HANDLE_T;
 
 /** Allocate an opaque image on VideoCore.
  *

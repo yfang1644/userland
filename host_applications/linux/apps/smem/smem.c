@@ -324,7 +324,7 @@ int main( int argc, char **argv )
       usr_hdl_1 = vcsm_malloc( alloc_size,
                                "smem-test-alloc" );
 
-      vcos_log_info( "Allocation 1 result: user %x, vc-hdl %x",
+      vcos_log_info( "Allocation 1 result: user %x, vc-hdl %lx",
                      usr_hdl_1, vcsm_vc_hdl_from_hdl( usr_hdl_1 ) );
 
 #if defined(DOUBLE_ALLOC) || defined(RESIZE_ALLOC)

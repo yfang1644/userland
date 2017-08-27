@@ -1244,7 +1244,7 @@ static uint8_t *mmal_vc_port_payload_alloc(MMAL_PORT_T *port, uint32_t payload_s
    {
       MMAL_OPAQUE_IMAGE_HANDLE_T h = mmal_vc_opaque_alloc_desc(port->name);
       can_deref = MMAL_FALSE;
-      ret = (void*)(uintptr_t)h;
+      ret = (void*)h;
       if (!ret)
       {
          LOG_ERROR("%s: failed to allocate %d bytes opaque memory",
@@ -1293,7 +1293,7 @@ static void mmal_vc_port_payload_free(MMAL_PORT_T *port, uint8_t *payload)
    if (module->opaque_allocs)
    {
       module->opaque_allocs--;
-      mmal_vc_opaque_release((MMAL_OPAQUE_IMAGE_HANDLE_T)(uintptr_t)payload);
+      mmal_vc_opaque_release((MMAL_OPAQUE_IMAGE_HANDLE_T)payload);
       return;
    }
 

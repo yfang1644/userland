@@ -141,13 +141,34 @@ static INLINE uint32_t _ror(uint32_t x, uint32_t y)
 #else
 static INLINE int32_t _adds(int32_t x, int32_t y)
 {
-   int32_t z = x + y;
-   return (y > 0) ? ((z < x) ? (int32_t)0x7fffffff : z) : ((z > x) ? (int32_t)0x80000000 : z);
+    int32_t z = x + y;
+    int32_t sign = (x ^ y) & 0x80000000;
+    if (sign == 0) {
+        if ((x > 0) && (z <= 0))
+            return (int32_t)0x7fffffff;
+        else if ((x < 0) && (z >= 0))
+            return (int32_t)0x80000000;
+        else
+            return z;
+    }
+    return z;
+
+//    return (y > 0) ? ((z < x) ? (int32_t)0x7fffffff : z) : ((z > x) ? (int32_t)0x80000000 : z);
 }
 
 static INLINE int32_t _subs(int32_t x, int32_t y)
 {
-   int32_t z = x - y;
+    int32_t z = x - y;
+    int32_t sign = (x ^ y) & 0x80000000;
+    if (sign) {
+        if ((x > 0) && (z <= 0))
+            return (int32_t)0x7fffffff;
+        else if ((x < 0) && (z >= 0))
+            return (int32_t)0x80000000;
+        else
+            return z;
+    }
+    return z;
    return (y > 0) ? ((z > x) ? (int32_t)0x80000000 : z) : ((z < x) ? (int32_t)0x7fffffff : z);
 }
 

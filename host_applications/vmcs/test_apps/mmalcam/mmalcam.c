@@ -131,12 +131,12 @@ error:
 static void *test_mmal_camcorder(void *id)
 {
    MMALCAM_BEHAVIOUR_T *behaviour = (MMALCAM_BEHAVIOUR_T *)id;
-   int value;
+   long value;
 
    value = test_mmal_start_camcorder(&stop, behaviour);
 
-   LOG_TRACE("Thread terminating, result %d", value);
-   return (void *)(uintptr_t)value;
+   LOG_TRACE("Thread terminating, result %ld", value);
+   return (void *)value;
 }
 
 /*****************************************************************************/

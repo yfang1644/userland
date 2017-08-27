@@ -202,7 +202,7 @@ BRCMJPEG_STATUS_T brcmjpeg_process(BRCMJPEG_T *ctx, BRCMJPEG_REQUEST_T *req)
    if ((req->input && req->input_handle) ||
        (req->output && req->output_handle))
    {
-      LOG_ERROR("buffer pointer and handle both set (%p/%u %p/%u)",
+      LOG_ERROR("buffer pointer and handle both set (%p/%lu %p/%lu)",
             req->input, req->input_handle, req->output, req->output_handle);
       return BRCMJPEG_ERROR_REQUEST;
    }
@@ -473,7 +473,7 @@ static BRCMJPEG_STATUS_T brcmjpeg_encode(BRCMJPEG_T *ctx,
       {
          if (je->input_handle)
          {
-            in->data = (uint8_t *)(uintptr_t)je->input_handle;
+            in->data = (uint8_t *)je->input_handle;
             in->length = in->alloc_size = je->input_size;
          }
          else
@@ -632,7 +632,7 @@ static BRCMJPEG_STATUS_T brcmjpeg_decode(BRCMJPEG_T *ctx,
          {
             if (jd->output_handle)
             {
-               out->data = (uint8_t*)(uintptr_t)jd->output_handle;
+               out->data = (uint8_t*)jd->output_handle;
                out->alloc_size = jd->output_alloc_size;
             }
             status = mmal_port_send_buffer(port_out, out);

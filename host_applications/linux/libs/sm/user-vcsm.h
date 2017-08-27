@@ -289,7 +289,7 @@ unsigned int vcsm_vc_hdl_from_ptr( void *usr_ptr );
 **       use since nothing can be done with it (in particular
 **       for safety reason it cannot be used to map anything).
 */
-unsigned int vcsm_vc_hdl_from_hdl( unsigned int handle );
+unsigned long vcsm_vc_hdl_from_hdl( unsigned long handle );
 
 
 /* Retrieves a user opaque handle from a mapped user address
