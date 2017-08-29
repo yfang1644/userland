@@ -64,9 +64,9 @@ typedef enum
    VCSM_CACHE_TYPE_HOST_AND_VC,     // Allocation is cached on both host and videocore.
 
 } VCSM_CACHE_TYPE_T;
-static unsigned int (*vcsm_malloc_cache)(unsigned int size, VCSM_CACHE_TYPE_T cache, char *name);
-static unsigned int (*vcsm_vc_hdl_from_hdl)(unsigned int handle);
-static void (*vcsm_free) (unsigned int handle);
+static unsigned long(*vcsm_malloc_cache)(unsigned int size, VCSM_CACHE_TYPE_T cache, char *name);
+static unsigned long (*vcsm_vc_hdl_from_hdl)(unsigned long handle);
+static void (*vcsm_free) (unsigned long handle);
 #endif /* KHRONOS_HAVE_VCSM */
 
 static VCOS_LOG_CAT_T egl_khr_image_client_log = VCOS_LOG_INIT("egl_khr_image_client", VCOS_LOG_WARN);

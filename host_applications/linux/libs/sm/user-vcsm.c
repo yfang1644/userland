@@ -212,7 +212,7 @@ out:
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned int vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *name )
+unsigned long vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *name )
 {
    struct vmcs_sm_ioctl_alloc alloc;
    unsigned int size_aligned = size;
@@ -251,7 +251,7 @@ unsigned int vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char
 
    if ( rc < 0 || alloc.handle == 0 )
    {
-      vcos_log_error( "[%s]: [%d] [%s]: ioctl mem-alloc FAILED [%d] (hdl: %x)",
+      vcos_log_error( "[%s]: [%d] [%s]: ioctl mem-alloc FAILED [%d] (hdl: %lx)",
                       __func__,
                       getpid(),
                       alloc.name,
@@ -260,7 +260,7 @@ unsigned int vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char
       goto error;
    }
 
-   vcos_log_trace( "[%s]: [%d] [%s]: ioctl mem-alloc %d (hdl: %x)",
+   vcos_log_trace( "[%s]: [%d] [%s]: ioctl mem-alloc %d (hdl: %lx)",
                    __func__,
                    getpid(),
                    alloc.name,
@@ -278,7 +278,7 @@ unsigned int vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char
 
    if ( usr_ptr == NULL )
    {
-      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %x)",
+      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %lx)",
                       __func__,
                       getpid(),
                       alloc.handle );
@@ -330,7 +330,7 @@ unsigned int vcsm_malloc( unsigned int size, char *name )
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned int vcsm_malloc_share( unsigned int handle )
+unsigned int vcsm_malloc_share( unsigned long handle )
 {
    struct vmcs_sm_ioctl_alloc_share alloc;
    void *usr_ptr = NULL;
@@ -356,7 +356,7 @@ unsigned int vcsm_malloc_share( unsigned int handle )
 
    if ( rc < 0 || alloc.handle == 0 )
    {
-      vcos_log_error( "[%s]: [%d]: ioctl mem-share FAILED [%d] (hdl: %x->%x)",
+      vcos_log_error( "[%s]: [%d]: ioctl mem-share FAILED [%d] (hdl: %lx->%lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -365,7 +365,7 @@ unsigned int vcsm_malloc_share( unsigned int handle )
       goto error;
    }
 
-   vcos_log_trace( "[%s]: [%d]: ioctl mem-share %d (hdl: %x->%x)",
+   vcos_log_trace( "[%s]: [%d]: ioctl mem-share %d (hdl: %lx->%lx)",
                    __func__,
                    getpid(),
                    rc,
@@ -383,7 +383,7 @@ unsigned int vcsm_malloc_share( unsigned int handle )
 
    if ( usr_ptr == NULL )
    {
-      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %x)",
+      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %lx)",
                       __func__,
                       getpid(),
                       alloc.handle );
@@ -412,7 +412,7 @@ unsigned int vcsm_malloc_share( unsigned int handle )
 ** being freed up as part of the vcsm_exit process.  In the end the
 ** memory is guaranteed to be freed one way or another.
 */
-void vcsm_free( unsigned int handle )
+void vcsm_free( unsigned long handle )
 {
    int rc;
    struct vmcs_sm_ioctl_free alloc_free;
@@ -441,7 +441,7 @@ void vcsm_free( unsigned int handle )
                VMCS_SM_IOCTL_SIZE_USR_HDL,
                &sz );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %x) - size %u",
+   vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %lx) - size %u",
                    __func__,
                    getpid(),
                    rc,
@@ -466,14 +466,14 @@ void vcsm_free( unsigned int handle )
    {
       munmap( usr_ptr, sz.size );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl unmap hdl: %x",
+      vcos_log_trace( "[%s]: [%d]: ioctl unmap hdl: %lx",
                       __func__,
                       getpid(),
                       sz.handle );
    }
    else
    {
-      vcos_log_trace( "[%s]: [%d]: freeing unmapped area (hdl: %x)",
+      vcos_log_trace( "[%s]: [%d]: freeing unmapped area (hdl: %lx)",
                       __func__,
                       getpid(),
                       map.handle );
@@ -487,7 +487,7 @@ void vcsm_free( unsigned int handle )
                VMCS_SM_IOCTL_MEM_FREE,
                &alloc_free );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl mem-free %d (hdl: %x)",
+   vcos_log_trace( "[%s]: [%d]: ioctl mem-free %d (hdl: %lx)",
                    __func__,
                    getpid(),
                    rc,
@@ -584,7 +584,7 @@ void vcsm_status( VCSM_STATUS_T status, int pid )
 **       use since nothing can be done with it (in particular
 **       for safety reason it cannot be used to map anything).
 */
-unsigned int vcsm_vc_hdl_from_ptr( void *usr_ptr )
+unsigned long vcsm_vc_hdl_from_ptr( void *usr_ptr )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -609,7 +609,7 @@ unsigned int vcsm_vc_hdl_from_ptr( void *usr_ptr )
 
    if ( rc < 0 )
    {
-      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-hdl FAILED [%d] (pid: %d, addr: %x)",
+      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-hdl FAILED [%d] (pid: %d, addr: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -620,7 +620,7 @@ unsigned int vcsm_vc_hdl_from_ptr( void *usr_ptr )
    }
    else
    {
-      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %x, addr: %x)",
+      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %lx, addr: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -646,7 +646,7 @@ unsigned int vcsm_vc_hdl_from_ptr( void *usr_ptr )
 **       use since nothing can be done with it (in particular
 **       for safety reason it cannot be used to map anything).
 */
-unsigned int vcsm_vc_hdl_from_hdl( unsigned int handle )
+unsigned long vcsm_vc_hdl_from_hdl( unsigned long handle )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -671,7 +671,7 @@ unsigned int vcsm_vc_hdl_from_hdl( unsigned int handle )
 
    if ( rc < 0 )
    {
-      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-hdl FAILED [%d] (pid: %d, hdl: %x)",
+      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-hdl FAILED [%d] (pid: %d, hdl: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -682,7 +682,7 @@ unsigned int vcsm_vc_hdl_from_hdl( unsigned int handle )
    }
    else
    {
-      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %x)",
+      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -703,7 +703,7 @@ unsigned int vcsm_vc_hdl_from_hdl( unsigned int handle )
 ** which can access the data allocated via the vcsm_malloc
 ** call.
 */
-void *vcsm_usr_address( unsigned int handle )
+void *vcsm_usr_address( unsigned long handle )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -728,7 +728,7 @@ void *vcsm_usr_address( unsigned int handle )
 
    if ( rc < 0 )
    {
-      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-address FAILED [%d] (pid: %d, addr: %x)",
+      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-address FAILED [%d] (pid: %d, addr: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -739,7 +739,7 @@ void *vcsm_usr_address( unsigned int handle )
    }
    else
    {
-      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-address %d (hdl: %x, addr: %x)",
+      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-address %d (hdl: %lx, addr: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -757,7 +757,7 @@ void *vcsm_usr_address( unsigned int handle )
 ** Returns:        0 on error
 **                 a non-zero opaque handle on success.
 */
-unsigned int vcsm_usr_handle( void *usr_ptr )
+unsigned long vcsm_usr_handle( void *usr_ptr )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -782,7 +782,7 @@ unsigned int vcsm_usr_handle( void *usr_ptr )
 
    if ( rc < 0 )
    {
-      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-hdl FAILED [%d] (pid: %d, addr: %x)",
+      vcos_log_error( "[%s]: [%d]: ioctl mapped-usr-hdl FAILED [%d] (pid: %d, addr: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -793,7 +793,7 @@ unsigned int vcsm_usr_handle( void *usr_ptr )
    }
    else
    {
-      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %x, addr: %x)",
+      vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %lx, addr: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -817,7 +817,7 @@ unsigned int vcsm_usr_handle( void *usr_ptr )
 ** the lock content (ie until a corresponding vcsm_unlock_xx
 ** is invoked).
 */
-void *vcsm_lock( unsigned int handle )
+void *vcsm_lock( unsigned long handle )
 {
    int rc;
    struct vmcs_sm_ioctl_lock_unlock lock_unlock;
@@ -848,7 +848,7 @@ void *vcsm_lock( unsigned int handle )
                VMCS_SM_IOCTL_SIZE_USR_HDL,
                &sz );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %x) - size %u",
+   vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %lx) - size %u",
                    __func__,
                    getpid(),
                    rc,
@@ -870,7 +870,7 @@ void *vcsm_lock( unsigned int handle )
                VMCS_SM_IOCTL_MEM_LOCK,
                &lock_unlock );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl mem-lock %d (hdl: %x)",
+   vcos_log_trace( "[%s]: [%d]: ioctl mem-lock %d (hdl: %lx)",
                    __func__,
                    getpid(),
                    rc,
@@ -883,7 +883,7 @@ void *vcsm_lock( unsigned int handle )
       goto out;
    }
 
-   usr_ptr = (void *)lock_unlock.addr;
+   usr_ptr = (void *) lock_unlock.addr;
 
    /* If applicable, invalidate the cache now.
    */
@@ -897,7 +897,7 @@ void *vcsm_lock( unsigned int handle )
                   VMCS_SM_IOCTL_MEM_INVALID,
                   &cache );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl invalidate (cache) %d (hdl: %x, addr: %x, size: %u)",
+      vcos_log_trace( "[%s]: [%d]: ioctl invalidate (cache) %d (hdl: %lx, addr: %lx, size: %u)",
                       __func__,
                       getpid(),
                       rc,
@@ -907,13 +907,13 @@ void *vcsm_lock( unsigned int handle )
 
       if ( rc < 0 )
       {
-         vcos_log_error( "[%s]: [%d]: invalidate failed (rc: %d) - [%x;%x] - size: %u (hdl: %x) - cache incoherency",
+         vcos_log_error( "[%s]: [%d]: invalidate failed (rc: %d) - [%lx;%lx] - size: %u (hdl: %lx) - cache incoherency",
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned int) cache.addr,
-                         (unsigned int) (cache.addr + cache.size),
-                         (unsigned int) (cache.addr + cache.size) - (unsigned int) cache.addr,
+                         (unsigned long) cache.addr,
+                         (unsigned long) (cache.addr + cache.size),
+                         (unsigned int) (cache.size),
                          cache.handle );
       }
    }
@@ -954,7 +954,7 @@ out:
 ** the lock content (ie until a corresponding vcsm_unlock_xx
 ** is invoked).
 */
-void *vcsm_lock_cache( unsigned int handle,
+void *vcsm_lock_cache( unsigned long handle,
                        VCSM_CACHE_TYPE_T cache_update,
                        VCSM_CACHE_TYPE_T *cache_result )
 {
@@ -990,7 +990,7 @@ void *vcsm_lock_cache( unsigned int handle,
                VMCS_SM_IOCTL_CHK_USR_HDL,
                &chk );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl chk-usr-hdl %d (hdl: %x, addr: %x, sz: %u, cache: %d)",
+   vcos_log_trace( "[%s]: [%d]: ioctl chk-usr-hdl %d (hdl: %lx, addr: %lx, sz: %u, cache: %d)",
                    __func__,
                    getpid(),
                    rc,
@@ -1012,7 +1012,7 @@ void *vcsm_lock_cache( unsigned int handle,
    {
       new_cache = vcsm_cache_table_lookup( (VCSM_CACHE_TYPE_T) chk.cache,
                                            cache_update );
-      vcos_log_trace( "[%s]: [%d]: cache lookup hdl: %x: [cur %d ; req %d] -> new %d ",
+      vcos_log_trace( "[%s]: [%d]: cache lookup hdl: %lx: [cur %d ; req %d] -> new %d ",
                       __func__,
                       getpid(),
                       chk.handle,
@@ -1047,7 +1047,7 @@ void *vcsm_lock_cache( unsigned int handle,
    {
       munmap( (void *)chk.addr, chk.size );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl unmap hdl: %x",
+      vcos_log_trace( "[%s]: [%d]: ioctl unmap hdl: %lx",
                       __func__,
                       getpid(),
                       chk.handle );
@@ -1063,7 +1063,7 @@ void *vcsm_lock_cache( unsigned int handle,
                VMCS_SM_IOCTL_MEM_LOCK_CACHE,
                &lock_cache );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl mem-lock-cache %d (hdl: %x)",
+   vcos_log_trace( "[%s]: [%d]: ioctl mem-lock-cache %d (hdl: %lx)",
                    __func__,
                    getpid(),
                    rc,
@@ -1088,7 +1088,7 @@ void *vcsm_lock_cache( unsigned int handle,
                   VMCS_SM_IOCTL_SIZE_USR_HDL,
                   &sz );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %x) - size %u",
+      vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %lx) - size %u",
                       __func__,
                       getpid(),
                       rc,
@@ -1114,7 +1114,7 @@ void *vcsm_lock_cache( unsigned int handle,
 
    if ( usr_ptr == NULL )
    {
-      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %x)",
+      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %lx)",
                       __func__,
                       getpid(),
                       chk.handle );
@@ -1132,7 +1132,7 @@ void *vcsm_lock_cache( unsigned int handle,
                   VMCS_SM_IOCTL_MEM_INVALID,
                   &cache );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl invalidate (cache) %d (hdl: %x, addr: %x, size: %u)",
+      vcos_log_trace( "[%s]: [%d]: ioctl invalidate (cache) %d (hdl: %lx, addr: %lx, size: %u)",
                       __func__,
                       getpid(),
                       rc,
@@ -1142,13 +1142,13 @@ void *vcsm_lock_cache( unsigned int handle,
 
       if ( rc < 0 )
       {
-         vcos_log_error( "[%s]: [%d]: invalidate failed (rc: %d) - [%x;%x] - size: %u (hdl: %x) - cache incoherency",
+         vcos_log_error( "[%s]: [%d]: invalidate failed (rc: %d) - [%lx;%lx] - size: %u (hdl: %lx) - cache incoherency",
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned int) cache.addr,
-                         (unsigned int) (cache.addr + cache.size),
-                         (unsigned int) (cache.addr + cache.size) - (unsigned int) cache.addr,
+                         (unsigned long) cache.addr,
+                         (unsigned long) (cache.addr + cache.size),
+                         (unsigned int) (cache.size),
                          cache.handle );
       }
    }
@@ -1217,7 +1217,7 @@ int vcsm_unlock_ptr_sp( void *usr_ptr, int cache_no_flush )
                VMCS_SM_IOCTL_MAP_USR_HDL,
                &map );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %x, addr: %x, sz: %u)",
+   vcos_log_trace( "[%s]: [%d]: ioctl mapped-usr-hdl %d (hdl: %lx, addr: %lx, sz: %u)",
                    __func__,
                    getpid(),
                    rc,
@@ -1244,7 +1244,7 @@ int vcsm_unlock_ptr_sp( void *usr_ptr, int cache_no_flush )
                   VMCS_SM_IOCTL_MEM_FLUSH,
                   &cache );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl flush (cache) %d (hdl: %x, addr: %x, size: %u)",
+      vcos_log_trace( "[%s]: [%d]: ioctl flush (cache) %d (hdl: %lx, addr: %lx, size: %u)",
                       __func__,
                       getpid(),
                       rc,
@@ -1254,13 +1254,13 @@ int vcsm_unlock_ptr_sp( void *usr_ptr, int cache_no_flush )
 
       if ( rc < 0 )
       {
-         vcos_log_error( "[%s]: [%d]: flush failed (rc: %d) - [%x;%x] - size: %u (hdl: %x) - cache incoherency",
+         vcos_log_error( "[%s]: [%d]: flush failed (rc: %d) - [%lx;%lx] - size: %u (hdl: %lx) - cache incoherency",
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned int) cache.addr,
-                         (unsigned int) (cache.addr + cache.size),
-                         (unsigned int) (cache.addr + cache.size) - (unsigned int) cache.addr,
+                         (unsigned long) cache.addr,
+                         (unsigned long) (cache.addr + cache.size),
+                         (unsigned int) (cache.size),
                          cache.handle );
       }
    }
@@ -1273,7 +1273,7 @@ int vcsm_unlock_ptr_sp( void *usr_ptr, int cache_no_flush )
                VMCS_SM_IOCTL_MEM_UNLOCK,
                &lock_unlock );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl mem-unlock %d (hdl: %x)",
+   vcos_log_trace( "[%s]: [%d]: ioctl mem-unlock %d (hdl: %lx)",
                    __func__,
                    getpid(),
                    rc,
@@ -1344,7 +1344,7 @@ int vcsm_unlock_hdl_sp( unsigned int handle, int cache_no_flush )
                VMCS_SM_IOCTL_CHK_USR_HDL,
                &chk );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl chk-usr-hdl %d (hdl: %x, addr: %x, sz: %u) nf %d",
+   vcos_log_trace( "[%s]: [%d]: ioctl chk-usr-hdl %d (hdl: %lx, addr: %lx, sz: %u) nf %d",
                    __func__,
                    getpid(),
                    rc,
@@ -1372,7 +1372,7 @@ int vcsm_unlock_hdl_sp( unsigned int handle, int cache_no_flush )
                   VMCS_SM_IOCTL_MEM_FLUSH,
                   &cache );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl flush (cache) %d (hdl: %x)",
+      vcos_log_trace( "[%s]: [%d]: ioctl flush (cache) %d (hdl: %lx)",
                       __func__,
                       getpid(),
                       rc,
@@ -1380,13 +1380,13 @@ int vcsm_unlock_hdl_sp( unsigned int handle, int cache_no_flush )
 
       if ( rc < 0 )
       {
-         vcos_log_error( "[%s]: [%d]: flush failed (rc: %d) - [%x;%x] - size: %u (hdl: %x) - cache incoherency",
+         vcos_log_error( "[%s]: [%d]: flush failed (rc: %d) - [%lx;%lx] - size: %u (hdl: %lx) - cache incoherency",
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned int) cache.addr,
-                         (unsigned int) (cache.addr + cache.size),
-                         (unsigned int) (cache.addr + cache.size) - (unsigned int) cache.addr,
+                         (unsigned long) cache.addr,
+                         (unsigned long) (cache.addr + cache.size),
+                         (unsigned int) (cache.size),
                          cache.handle );
       }
    }
@@ -1399,7 +1399,7 @@ int vcsm_unlock_hdl_sp( unsigned int handle, int cache_no_flush )
                VMCS_SM_IOCTL_MEM_UNLOCK,
                &lock_unlock );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl mem-unlock %d (hdl: %x)",
+   vcos_log_trace( "[%s]: [%d]: ioctl mem-unlock %d (hdl: %lx)",
                    __func__,
                    getpid(),
                    rc,
@@ -1436,7 +1436,7 @@ int vcsm_unlock_hdl( unsigned int handle )
 ** remains available the same way it would be following a
 ** successful vcsm_malloc.
 */
-int vcsm_resize( unsigned int handle, unsigned int new_size )
+int vcsm_resize( unsigned long handle, unsigned int new_size )
 {
    int rc;
    struct vmcs_sm_ioctl_size sz;
@@ -1473,7 +1473,7 @@ int vcsm_resize( unsigned int handle, unsigned int new_size )
                VMCS_SM_IOCTL_SIZE_USR_HDL,
                &sz );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %x) - size %u",
+   vcos_log_trace( "[%s]: [%d]: ioctl size-usr-hdl %d (hdl: %lx) - size %u",
                    __func__,
                    getpid(),
                    rc,
@@ -1497,14 +1497,14 @@ int vcsm_resize( unsigned int handle, unsigned int new_size )
    {
       munmap( usr_ptr, sz.size );
 
-      vcos_log_trace( "[%s]: [%d]: ioctl unmap hdl: %x",
+      vcos_log_trace( "[%s]: [%d]: ioctl unmap hdl: %lx",
                       __func__,
                       getpid(),
                       sz.handle );
    }
    else
    {
-      vcos_log_trace( "[%s]: [%d]: freeing unmapped area (hdl: %x)",
+      vcos_log_trace( "[%s]: [%d]: freeing unmapped area (hdl: %lx)",
                       __func__,
                       getpid(),
                       map.handle );
@@ -1519,7 +1519,7 @@ int vcsm_resize( unsigned int handle, unsigned int new_size )
                VMCS_SM_IOCTL_MEM_RESIZE,
                &resize );
 
-   vcos_log_trace( "[%s]: [%d]: ioctl resize %d (hdl: %x)",
+   vcos_log_trace( "[%s]: [%d]: ioctl resize %d (hdl: %lx)",
                    __func__,
                    getpid(),
                    rc,
@@ -1541,7 +1541,7 @@ int vcsm_resize( unsigned int handle, unsigned int new_size )
                vcsm_handle,
                resize.handle ) == NULL )
    {
-      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %x)",
+      vcos_log_error( "[%s]: [%d]: mmap FAILED (hdl: %lx)",
                       __func__,
                       getpid(),
                       resize.handle );

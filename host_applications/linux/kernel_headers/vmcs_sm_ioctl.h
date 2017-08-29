@@ -98,39 +98,39 @@ struct vmcs_sm_ioctl_alloc {
 	char name[VMCS_SM_RESOURCE_NAME];
 
 	/* kernel -> user */
-	unsigned int handle;
+	unsigned long handle;
 	/* unsigned int base_addr; */
 };
 
 struct vmcs_sm_ioctl_alloc_share {
 	/* user -> kernel */
-	unsigned int handle;
-	unsigned int size;
+	unsigned long handle;
+	unsigned long size;
 };
 
 struct vmcs_sm_ioctl_free {
 	/* user -> kernel */
-	unsigned int handle;
+	unsigned long handle;
 	/* unsigned int base_addr; */
 };
 
 struct vmcs_sm_ioctl_lock_unlock {
 	/* user -> kernel */
-	unsigned int handle;
+	unsigned long handle;
 
 	/* kernel -> user */
-	unsigned int addr;
+	unsigned long addr;
 };
 
 struct vmcs_sm_ioctl_lock_cache {
 	/* user -> kernel */
-	unsigned int handle;
+	unsigned long handle;
 	enum vmcs_sm_cache_e cached;
 };
 
 struct vmcs_sm_ioctl_resize {
 	/* user -> kernel */
-	unsigned int handle;
+	unsigned long handle;
 	unsigned int new_size;
 
 	/* kernel -> user */
@@ -141,8 +141,8 @@ struct vmcs_sm_ioctl_map {
 	/* user -> kernel */
 	/* and kernel -> user */
 	unsigned int pid;
-	unsigned int handle;
-	unsigned int addr;
+	unsigned long handle;
+	unsigned long addr;
 
 	/* kernel -> user */
 	unsigned int size;
@@ -155,17 +155,17 @@ struct vmcs_sm_ioctl_walk {
 
 struct vmcs_sm_ioctl_chk {
 	/* user -> kernel */
-	unsigned int handle;
+	unsigned long handle;
 
 	/* kernel -> user */
-	unsigned int addr;
+	unsigned long addr;
 	unsigned int size;
 	enum vmcs_sm_cache_e cache;
 };
 
 struct vmcs_sm_ioctl_size {
 	/* user -> kernel */
-	unsigned int handle;
+	unsigned long handle;
 
 	/* kernel -> user */
 	unsigned int size;
@@ -173,8 +173,8 @@ struct vmcs_sm_ioctl_size {
 
 struct vmcs_sm_ioctl_cache {
 	/* user -> kernel */
-	unsigned int handle;
-	unsigned int addr;
+	unsigned long handle;
+	unsigned long addr;
 	unsigned int size;
 };
 
@@ -182,8 +182,8 @@ struct vmcs_sm_ioctl_clean_invalid {
 	/* user -> kernel */
 	struct {
 		unsigned int cmd;
-		unsigned int handle;
-		unsigned int addr;
+		unsigned long handle;
+		unsigned long addr;
 		unsigned int size;
 	} s[8];
 };
