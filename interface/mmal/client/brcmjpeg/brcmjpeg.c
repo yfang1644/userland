@@ -202,7 +202,7 @@ BRCMJPEG_STATUS_T brcmjpeg_process(BRCMJPEG_T *ctx, BRCMJPEG_REQUEST_T *req)
    if ((req->input && req->input_handle) ||
        (req->output && req->output_handle))
    {
-      LOG_ERROR("buffer pointer and handle both set (%p/%u %p/%u)",
+      LOG_ERROR("buffer pointer and handle both set (%p/%lu %p/%lu)",
             req->input, req->input_handle, req->output, req->output_handle);
       return BRCMJPEG_ERROR_REQUEST;
    }

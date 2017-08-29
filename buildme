@@ -35,7 +35,7 @@ else
 	mkdir -p build/arm-linux/$BUILDSUBDIR
 	pushd build/arm-linux/$BUILDSUBDIR
 	cmake -DCMAKE_TOOLCHAIN_FILE=../../../makefiles/cmake/toolchains/arm-linux-gnueabihf.cmake -DCMAKE_BUILD_TYPE=$BUILDTYPE ../../..
-	make -j1
+	make -j `nproc`
 
 	if [ "$1" != "" ]; then
 		make install DESTDIR=$1

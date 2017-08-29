@@ -13,9 +13,9 @@ SET(CMAKE_SYSTEM_PROCESSOR arm)
 # RaspBerry Pi
 #add_definitions("-mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard -marm")
 # RaspBerry Pi2
-add_definitions("-mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -marm")
+#add_definitions("-mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -marm")
 # RaspBerry Pi3
-#add_definitions("-mcpu=cortex-a53+crc+crypto -march=armv8-a+crc+crypto -mabi=lp64")
+add_definitions("-mcpu=cortex-a53+crc+crypto -march=armv8-a+crc+crypto -mabi=lp64")
 
 # rdynamic means the backtrace should work
 IF (CMAKE_BUILD_TYPE MATCHES "Debug")

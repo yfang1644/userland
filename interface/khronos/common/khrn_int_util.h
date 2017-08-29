@@ -181,6 +181,9 @@ static INLINE uint32_t _ror(uint32_t x, uint32_t y)
 
 static INLINE int32_t _abs(int32_t x)
 {
+    if (x == (int32_t)0x80000000)
+        return (int32_t)0x7fffffff;
+
    return x > 0 ? x : -x;
 }
 

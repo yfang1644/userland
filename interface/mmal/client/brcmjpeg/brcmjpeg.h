@@ -78,7 +78,7 @@ typedef struct
    /** Actual size of the input data */
    unsigned int input_size;
    /** Handle to input buffer containing input data */
-   unsigned int input_handle;
+   unsigned long input_handle;
 
    /** Pointer to the buffer used for the output data
      * A client should set output OR output_handle, but not both. */
@@ -88,7 +88,7 @@ typedef struct
    /** Actual size of the output data (this is an output parameter) */
    unsigned int output_size;
    /** Handle to the buffer used for the output data */
-   unsigned int output_handle;
+   unsigned long output_handle;
 
    /** Width of the raw frame (this is an input parameter for encode) */
    unsigned int width;
