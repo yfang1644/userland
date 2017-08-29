@@ -1426,7 +1426,7 @@ static void encoder_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buf
                     if(pData->pstate->frame==0)pData->pstate->starttime=buffer->pts;
                     pData->pstate->lasttime=buffer->pts;
                     pts = buffer->pts - pData->pstate->starttime;
-                    fprintf(pData->pts_file_handle,"%ld.%03ld\n", pts/1000, pts%1000);
+                    fprintf(pData->pts_file_handle,"%ld.%03ld\n", (long)pts/1000, (long)pts%1000);
                     pData->pstate->frame++;
                   }
                }
