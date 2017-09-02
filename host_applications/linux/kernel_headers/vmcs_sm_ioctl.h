@@ -76,6 +76,8 @@ enum vmcs_sm_cmd_e {
 	VMCS_SM_CMD_CLEAN_INVALID,
 	VMCS_SM_CMD_CLEAN_INVALID2,
 
+	VMCS_SM_CMD_IMPORT_DMABUF,
+
 	VMCS_SM_CMD_LAST	/* Do no delete */
 };
 
@@ -98,39 +100,39 @@ struct vmcs_sm_ioctl_alloc {
 	char name[VMCS_SM_RESOURCE_NAME];
 
 	/* kernel -> user */
-	unsigned long handle;
+	uintptr_t handle;
 	/* unsigned int base_addr; */
 };
 
 struct vmcs_sm_ioctl_alloc_share {
 	/* user -> kernel */
-	unsigned long handle;
-	unsigned long size;
+	uintptr_t handle;
+	unsigned int size;
 };
 
 struct vmcs_sm_ioctl_free {
 	/* user -> kernel */
-	unsigned long handle;
+	uintptr_t handle;
 	/* unsigned int base_addr; */
 };
 
 struct vmcs_sm_ioctl_lock_unlock {
 	/* user -> kernel */
-	unsigned long handle;
+	uintptr_t handle;
 
 	/* kernel -> user */
-	unsigned long addr;
+	uintptr_t addr;
 };
 
 struct vmcs_sm_ioctl_lock_cache {
 	/* user -> kernel */
-	unsigned long handle;
+	uintptr_t handle;
 	enum vmcs_sm_cache_e cached;
 };
 
 struct vmcs_sm_ioctl_resize {
 	/* user -> kernel */
-	unsigned long handle;
+	uintptr_t handle;
 	unsigned int new_size;
 
 	/* kernel -> user */
@@ -141,8 +143,8 @@ struct vmcs_sm_ioctl_map {
 	/* user -> kernel */
 	/* and kernel -> user */
 	unsigned int pid;
-	unsigned long handle;
-	unsigned long addr;
+	uintptr_t handle;
+	uintptr_t addr;
 
 	/* kernel -> user */
 	unsigned int size;
@@ -155,17 +157,17 @@ struct vmcs_sm_ioctl_walk {
 
 struct vmcs_sm_ioctl_chk {
 	/* user -> kernel */
-	unsigned long handle;
+	uintptr_t handle;
 
 	/* kernel -> user */
-	unsigned long addr;
+	uintptr_t addr;
 	unsigned int size;
 	enum vmcs_sm_cache_e cache;
 };
 
 struct vmcs_sm_ioctl_size {
 	/* user -> kernel */
-	unsigned long handle;
+	uintptr_t handle;
 
 	/* kernel -> user */
 	unsigned int size;
@@ -173,8 +175,8 @@ struct vmcs_sm_ioctl_size {
 
 struct vmcs_sm_ioctl_cache {
 	/* user -> kernel */
-	unsigned long handle;
-	unsigned long addr;
+	uintptr_t handle;
+	uintptr_t addr;
 	unsigned int size;
 };
 
@@ -182,8 +184,8 @@ struct vmcs_sm_ioctl_clean_invalid {
 	/* user -> kernel */
 	struct {
 		unsigned int cmd;
-		unsigned long handle;
-		unsigned long addr;
+		uintptr_t handle;
+		uintptr_t addr;
 		unsigned int size;
 	} s[8];
 };
@@ -198,6 +200,16 @@ struct vmcs_sm_ioctl_clean_invalid2 {
 		uint32_t block_size;
 		uint32_t inter_block_stride;
 	} s[0];
+};
+
+struct vmcs_sm_ioctl_import_dmabuf {
+	/* user -> kernel */
+	int dmabuf_fd;
+	enum vmcs_sm_cache_e cached;
+	char name[VMCS_SM_RESOURCE_NAME];
+
+	/* kernel -> user */
+	uintptr_t handle;
 };
 
 /* IOCTL numbers */
@@ -268,6 +280,10 @@ struct vmcs_sm_ioctl_clean_invalid2 {
 #define VMCS_SM_IOCTL_HOST_WALK_PID_MAP\
 	_IOR(VMCS_SM_MAGIC_TYPE, VMCS_SM_CMD_HOST_WALK_PID_MAP,\
 	 struct vmcs_sm_ioctl_walk)
+
+#define VMCS_SM_IOCTL_MEM_IMPORT_DMABUF\
+	_IOR(VMCS_SM_MAGIC_TYPE, VMCS_SM_CMD_IMPORT_DMABUF,\
+	 struct vmcs_sm_ioctl_import_dmabuf)
 
 /* ---- Variable Externs ------------------------------------------------- */
 

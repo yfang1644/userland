@@ -3,7 +3,7 @@ if (NOT DEFINED LIBRARY_TYPE)
 set(LIBRARY_TYPE SHARED)
 endif (NOT DEFINED LIBRARY_TYPE)
 
-add_definitions(-Wall -Werror)
+add_definitions(-Wall)
 
 add_library(mmal SHARED util/mmal_util.c)
 

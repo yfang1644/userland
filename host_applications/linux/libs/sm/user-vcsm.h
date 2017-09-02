@@ -107,6 +107,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** A complete API is defined below.
 */
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -208,7 +210,7 @@ unsigned int vcsm_malloc( unsigned int size, char *name );
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned long vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *name );
+uintptr_t vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *name );
 
 
 /* Shares an allocated block of memory via the vcsm memory allocator.
@@ -225,7 +227,7 @@ unsigned long vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, cha
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned int vcsm_malloc_share( unsigned long handle );
+unsigned int vcsm_malloc_share( uintptr_t handle );
 
 
 /* Resizes a block of memory allocated previously by vcsm_alloc.
@@ -240,7 +242,7 @@ unsigned int vcsm_malloc_share( unsigned long handle );
 ** remains available the same way it would be following a
 ** successful vcsm_malloc.
 */
-int vcsm_resize( unsigned long handle, unsigned int new_size );
+int vcsm_resize( uintptr_t handle, unsigned int new_size );
 
 
 /* Frees a block of memory that was successfully allocated by
@@ -255,7 +257,7 @@ int vcsm_resize( unsigned long handle, unsigned int new_size );
 ** being freed up as part of the vcsm_exit process.  In the end the
 ** memory is guaranteed to be freed one way or another.
 */
-void vcsm_free( unsigned long handle );
+void vcsm_free( uintptr_t handle );
 
 
 /* Retrieves a videocore opaque handle from a mapped user address
@@ -272,7 +274,7 @@ void vcsm_free( unsigned long handle );
 **       use since nothing can be done with it (in particular
 **       for safety reason it cannot be used to map anything).
 */
-unsigned long vcsm_vc_hdl_from_ptr( void *usr_ptr );
+uintptr_t vcsm_vc_hdl_from_ptr( void *usr_ptr );
 
 
 /* Retrieves a videocore opaque handle from a opaque handle
@@ -289,7 +291,7 @@ unsigned long vcsm_vc_hdl_from_ptr( void *usr_ptr );
 **       use since nothing can be done with it (in particular
 **       for safety reason it cannot be used to map anything).
 */
-unsigned long vcsm_vc_hdl_from_hdl( unsigned long handle );
+uintptr_t vcsm_vc_hdl_from_hdl( uintptr_t handle );
 
 
 /* Retrieves a user opaque handle from a mapped user address
@@ -298,7 +300,7 @@ unsigned long vcsm_vc_hdl_from_hdl( unsigned long handle );
 ** Returns:        0 on error
 **                 a non-zero opaque handle on success.
 */
-unsigned long vcsm_usr_handle( void *usr_ptr );
+uintptr_t vcsm_usr_handle( void *usr_ptr );
 
 
 /* Retrieves a mapped user address from an opaque user
@@ -311,7 +313,7 @@ unsigned long vcsm_usr_handle( void *usr_ptr );
 ** which can access the data allocated via the vcsm_malloc
 ** call.
 */
-void *vcsm_usr_address( unsigned long handle );
+void *vcsm_usr_address( uintptr_t handle );
 
 
 /* Locks the memory associated with this opaque handle.
@@ -326,7 +328,7 @@ void *vcsm_usr_address( unsigned long handle );
 ** the lock content (ie until a corresponding vcsm_unlock_xx
 ** is invoked).
 */
-void *vcsm_lock( unsigned long handle );
+void *vcsm_lock( uintptr_t handle );
 
 
 /* Locks the memory associated with this opaque handle.  The lock
@@ -356,7 +358,7 @@ void *vcsm_lock( unsigned long handle );
 ** the lock content (ie until a corresponding vcsm_unlock_xx
 ** is invoked).
 */
-void *vcsm_lock_cache( unsigned long handle,
+void *vcsm_lock_cache( uintptr_t handle,
                        VCSM_CACHE_TYPE_T cache_update,
                        VCSM_CACHE_TYPE_T *cache_result );
 
@@ -452,6 +454,8 @@ struct vcsm_user_clean_invalid2_s {
 };
 
 int vcsm_clean_invalid2( struct vcsm_user_clean_invalid2_s *s );
+
+unsigned int vcsm_import_dmabuf( int dmabuf, char *name );
 
 #ifdef __cplusplus
 }

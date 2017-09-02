@@ -58,8 +58,8 @@ int main(int argc, char **argv)
     BRCMJPEG_T *enc = 0, *dec = 0;
     int64_t start, stop, time_dec = 0, time_enc = 0;
     unsigned int count = 1, format = PIXEL_FORMAT_YUYV;
-    unsigned int use_vcsm = 0, vc_handle = 0;
-    unsigned long handle = 0;
+    unsigned int use_vcsm = 0;
+    uintptr_t handle = 0, vc_handle = 0;
     int i, arg = 1, help = 0;
 
     // Parse command line arguments

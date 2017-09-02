@@ -154,8 +154,8 @@ uint8_t *mmal_vc_shm_alloc(uint32_t size)
    }
 
 #ifdef ENABLE_MMAL_VCSM
-   unsigned long vcsm_handle = vcsm_malloc_cache(size, VCSM_CACHE_TYPE_HOST, "mmal_vc_port buffer");
-   unsigned long vc_handle = vcsm_vc_hdl_from_hdl(vcsm_handle);
+   uintptr_t vcsm_handle = vcsm_malloc_cache(size, VCSM_CACHE_TYPE_HOST, "mmal_vc_port buffer");
+   uintptr_t vc_handle = vcsm_vc_hdl_from_hdl(vcsm_handle);
    mem = (uint8_t *)vcsm_lock( vcsm_handle );
    if (!mem || !vc_handle)
    {
@@ -193,7 +193,7 @@ MMAL_STATUS_T mmal_vc_shm_free(uint8_t *mem)
    if (payload_elem)
    {
 #ifdef ENABLE_MMAL_VCSM
-      vcsm_free((unsigned long)payload_elem->handle);
+      vcsm_free((uintptr_t)payload_elem->handle);
 #endif /* ENABLE_MMAL_VCSM */
       mmal_vc_payload_list_release(payload_elem);
       return MMAL_SUCCESS;
@@ -212,7 +212,7 @@ uint8_t *mmal_vc_shm_lock(uint8_t *mem, uint32_t workaround)
    if (elem) {
       mem = elem->mem;
 #ifdef ENABLE_MMAL_VCSM
-      void *p = vcsm_lock((unsigned long)elem->handle);
+      void *p = vcsm_lock((uintptr_t)elem->handle);
       if (!p)
          assert(0);
 #endif /* ENABLE_MMAL_VCSM */

@@ -32,6 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef BRCM_JPEG_H
 #define BRCM_JPEG_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -78,7 +80,7 @@ typedef struct
    /** Actual size of the input data */
    unsigned int input_size;
    /** Handle to input buffer containing input data */
-   unsigned long input_handle;
+   uintptr_t input_handle;
 
    /** Pointer to the buffer used for the output data
      * A client should set output OR output_handle, but not both. */
@@ -88,7 +90,7 @@ typedef struct
    /** Actual size of the output data (this is an output parameter) */
    unsigned int output_size;
    /** Handle to the buffer used for the output data */
-   unsigned long output_handle;
+   uintptr_t output_handle;
 
    /** Width of the raw frame (this is an input parameter for encode) */
    unsigned int width;

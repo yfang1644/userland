@@ -1,5 +1,5 @@
 
-add_definitions(-Werror)
+add_definitions(-Wall)
 
 # vcfiled - serves files to videocore. used for media handlers from
 # OpenMAX/IL and loading VLLs.

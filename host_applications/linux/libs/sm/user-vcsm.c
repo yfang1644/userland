@@ -212,7 +212,7 @@ out:
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned long vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *name )
+uintptr_t vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *name )
 {
    struct vmcs_sm_ioctl_alloc alloc;
    unsigned int size_aligned = size;
@@ -330,7 +330,7 @@ unsigned int vcsm_malloc( unsigned int size, char *name )
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned int vcsm_malloc_share( unsigned long handle )
+uintptr_t vcsm_malloc_share( uintptr_t handle )
 {
    struct vmcs_sm_ioctl_alloc_share alloc;
    void *usr_ptr = NULL;
@@ -412,7 +412,7 @@ unsigned int vcsm_malloc_share( unsigned long handle )
 ** being freed up as part of the vcsm_exit process.  In the end the
 ** memory is guaranteed to be freed one way or another.
 */
-void vcsm_free( unsigned long handle )
+void vcsm_free( uintptr_t handle )
 {
    int rc;
    struct vmcs_sm_ioctl_free alloc_free;
@@ -584,7 +584,7 @@ void vcsm_status( VCSM_STATUS_T status, int pid )
 **       use since nothing can be done with it (in particular
 **       for safety reason it cannot be used to map anything).
 */
-unsigned long vcsm_vc_hdl_from_ptr( void *usr_ptr )
+uintptr_t vcsm_vc_hdl_from_ptr( void *usr_ptr )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -601,7 +601,7 @@ unsigned long vcsm_vc_hdl_from_ptr( void *usr_ptr )
    memset( &map, 0, sizeof(map) );
 
    map.pid  = getpid();
-   map.addr = (unsigned long) usr_ptr;
+   map.addr = (uintptr_t) usr_ptr;
 
    rc = ioctl( vcsm_handle,
                VMCS_SM_IOCTL_MAP_VC_HDL_FR_ADDR,
@@ -646,7 +646,7 @@ unsigned long vcsm_vc_hdl_from_ptr( void *usr_ptr )
 **       use since nothing can be done with it (in particular
 **       for safety reason it cannot be used to map anything).
 */
-unsigned long vcsm_vc_hdl_from_hdl( unsigned long handle )
+uintptr_t vcsm_vc_hdl_from_hdl( uintptr_t handle )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -703,7 +703,7 @@ unsigned long vcsm_vc_hdl_from_hdl( unsigned long handle )
 ** which can access the data allocated via the vcsm_malloc
 ** call.
 */
-void *vcsm_usr_address( unsigned long handle )
+void *vcsm_usr_address( uintptr_t handle )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -757,7 +757,7 @@ void *vcsm_usr_address( unsigned long handle )
 ** Returns:        0 on error
 **                 a non-zero opaque handle on success.
 */
-unsigned long vcsm_usr_handle( void *usr_ptr )
+uintptr_t vcsm_usr_handle( void *usr_ptr )
 {
    int rc;
    struct vmcs_sm_ioctl_map map;
@@ -774,7 +774,7 @@ unsigned long vcsm_usr_handle( void *usr_ptr )
    memset( &map, 0, sizeof(map) );
    
    map.pid = getpid();
-   map.addr = (unsigned long) usr_ptr;
+   map.addr = (uintptr_t) usr_ptr;
 
    rc = ioctl( vcsm_handle,
                VMCS_SM_IOCTL_MAP_USR_HDL,
@@ -817,7 +817,7 @@ unsigned long vcsm_usr_handle( void *usr_ptr )
 ** the lock content (ie until a corresponding vcsm_unlock_xx
 ** is invoked).
 */
-void *vcsm_lock( unsigned long handle )
+void *vcsm_lock( uintptr_t handle )
 {
    int rc;
    struct vmcs_sm_ioctl_lock_unlock lock_unlock;
@@ -890,7 +890,7 @@ void *vcsm_lock( unsigned long handle )
    if ( usr_ptr && sz.size )
    {
       cache.handle = sz.handle;
-      cache.addr   = (unsigned long) usr_ptr;
+      cache.addr   = (uintptr_t) usr_ptr;
       cache.size   = sz.size;
 
       rc = ioctl( vcsm_handle,
@@ -911,8 +911,8 @@ void *vcsm_lock( unsigned long handle )
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned long) cache.addr,
-                         (unsigned long) (cache.addr + cache.size),
+                         (uintptr_t) cache.addr,
+                         (uintptr_t) (cache.addr + cache.size),
                          (unsigned int) (cache.size),
                          cache.handle );
       }
@@ -954,7 +954,7 @@ out:
 ** the lock content (ie until a corresponding vcsm_unlock_xx
 ** is invoked).
 */
-void *vcsm_lock_cache( unsigned long handle,
+void *vcsm_lock_cache( uintptr_t handle,
                        VCSM_CACHE_TYPE_T cache_update,
                        VCSM_CACHE_TYPE_T *cache_result )
 {
@@ -1146,8 +1146,8 @@ void *vcsm_lock_cache( unsigned long handle,
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned long) cache.addr,
-                         (unsigned long) (cache.addr + cache.size),
+                         (uintptr_t) cache.addr,
+                         (uintptr_t) (cache.addr + cache.size),
                          (unsigned int) (cache.size),
                          cache.handle );
       }
@@ -1211,7 +1211,7 @@ int vcsm_unlock_ptr_sp( void *usr_ptr, int cache_no_flush )
    /* Retrieve the handle of the memory we want to lock.
    */
    map.pid = getpid();
-   map.addr = (unsigned long) usr_ptr;
+   map.addr = (uintptr_t) usr_ptr;
 
    rc = ioctl( vcsm_handle,
                VMCS_SM_IOCTL_MAP_USR_HDL,
@@ -1258,8 +1258,8 @@ int vcsm_unlock_ptr_sp( void *usr_ptr, int cache_no_flush )
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned long) cache.addr,
-                         (unsigned long) (cache.addr + cache.size),
+                         (uintptr_t) cache.addr,
+                         (uintptr_t) (cache.addr + cache.size),
                          (unsigned int) (cache.size),
                          cache.handle );
       }
@@ -1384,8 +1384,8 @@ int vcsm_unlock_hdl_sp( unsigned int handle, int cache_no_flush )
                          __func__,
                          getpid(),
                          rc,
-                         (unsigned long) cache.addr,
-                         (unsigned long) (cache.addr + cache.size),
+                         (uintptr_t) cache.addr,
+                         (uintptr_t) (cache.addr + cache.size),
                          (unsigned int) (cache.size),
                          cache.handle );
       }
@@ -1436,7 +1436,7 @@ int vcsm_unlock_hdl( unsigned int handle )
 ** remains available the same way it would be following a
 ** successful vcsm_malloc.
 */
-int vcsm_resize( unsigned long handle, unsigned int new_size )
+int vcsm_resize( uintptr_t handle, unsigned int new_size )
 {
    int rc;
    struct vmcs_sm_ioctl_size sz;
@@ -1628,4 +1628,73 @@ int vcsm_clean_invalid2( struct vcsm_user_clean_invalid2_s *s )
 
 out:
    return rc;
+}
+
+/* Imports a dmabuf, and binds it to a VCSM handle and MEM_HANDLE_T
+**
+** Returns:        0 on error
+**                 a non-zero opaque handle on success.
+**
+** On success, the user must invoke vcsm_lock with the returned opaque
+** handle to gain access to the memory associated with the opaque handle.
+** When finished using the memory, the user calls vcsm_unlock_xx (see those
+** function definition for more details on the one that can be used).
+** Use vcsm_release to detach from the dmabuf (VideoCore may still hold
+** a reference to the buffer until it has finished with the buffer).
+**
+*/
+uintptr_t vcsm_import_dmabuf( int dmabuf, char *name )
+{
+   struct vmcs_sm_ioctl_import_dmabuf import;
+   int rc;
+
+   if ( vcsm_handle == VCSM_INVALID_HANDLE )
+   {
+      vcos_log_error( "[%s]: [%d]: invalid device or invalid handle!",
+                      __func__,
+                      getpid() );
+
+      rc = -1;
+      goto error;
+   }
+
+   memset( &import, 0, sizeof(import) );
+
+   /* Map the buffer on videocore via the VCSM (Videocore Shared Memory) interface. */
+   import.dmabuf_fd = dmabuf;
+   import.cached = VMCS_SM_CACHE_NONE; //Support no caching for now - makes it easier for cache management
+   if ( name != NULL )
+   {
+      memcpy ( import.name, name, 32 );
+   }
+   rc = ioctl( vcsm_handle,
+               VMCS_SM_IOCTL_MEM_IMPORT_DMABUF,
+               &import );
+
+   if ( rc < 0 || import.handle == 0 )
+   {
+      vcos_log_error( "[%s]: [%d] [%s]: ioctl mem-import-dmabuf FAILED [%d] (hdl: %lx)",
+                      __func__,
+                      getpid(),
+                      import.name,
+                      rc,
+                      import.handle );
+      goto error;
+   }
+
+   vcos_log_trace( "[%s]: [%d] [%s]: ioctl mem-import-dmabuf %d (hdl: %lx)",
+                   __func__,
+                   getpid(),
+                   import.name,
+                   rc,
+                   import.handle );
+
+   return import.handle;
+
+error:
+   if ( import.handle )
+   {
+      vcsm_free( import.handle );
+   }
+   return 0;
 }
