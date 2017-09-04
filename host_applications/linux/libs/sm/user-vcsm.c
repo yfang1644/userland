@@ -53,7 +53,7 @@ typedef struct
 
 static VCOS_LOG_CAT_T usrvcsm_log_category;
 #define VCOS_LOG_CATEGORY (&usrvcsm_log_category)
-static int vcsm_handle = VCSM_INVALID_HANDLE;
+static intptr_t vcsm_handle = VCSM_INVALID_HANDLE;
 static int vcsm_refcount;
 static unsigned int vcsm_page_size = 0;
 
@@ -311,7 +311,7 @@ uintptr_t vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *n
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned int vcsm_malloc( unsigned int size, char *name )
+uintptr_t vcsm_malloc( unsigned int size, char *name )
 {
    return vcsm_malloc_cache( size, VCSM_CACHE_TYPE_NONE, name );
 }
@@ -1628,73 +1628,4 @@ int vcsm_clean_invalid2( struct vcsm_user_clean_invalid2_s *s )
 
 out:
    return rc;
-}
-
-/* Imports a dmabuf, and binds it to a VCSM handle and MEM_HANDLE_T
-**
-** Returns:        0 on error
-**                 a non-zero opaque handle on success.
-**
-** On success, the user must invoke vcsm_lock with the returned opaque
-** handle to gain access to the memory associated with the opaque handle.
-** When finished using the memory, the user calls vcsm_unlock_xx (see those
-** function definition for more details on the one that can be used).
-** Use vcsm_release to detach from the dmabuf (VideoCore may still hold
-** a reference to the buffer until it has finished with the buffer).
-**
-*/
-uintptr_t vcsm_import_dmabuf( int dmabuf, char *name )
-{
-   struct vmcs_sm_ioctl_import_dmabuf import;
-   int rc;
-
-   if ( vcsm_handle == VCSM_INVALID_HANDLE )
-   {
-      vcos_log_error( "[%s]: [%d]: invalid device or invalid handle!",
-                      __func__,
-                      getpid() );
-
-      rc = -1;
-      goto error;
-   }
-
-   memset( &import, 0, sizeof(import) );
-
-   /* Map the buffer on videocore via the VCSM (Videocore Shared Memory) interface. */
-   import.dmabuf_fd = dmabuf;
-   import.cached = VMCS_SM_CACHE_NONE; //Support no caching for now - makes it easier for cache management
-   if ( name != NULL )
-   {
-      memcpy ( import.name, name, 32 );
-   }
-   rc = ioctl( vcsm_handle,
-               VMCS_SM_IOCTL_MEM_IMPORT_DMABUF,
-               &import );
-
-   if ( rc < 0 || import.handle == 0 )
-   {
-      vcos_log_error( "[%s]: [%d] [%s]: ioctl mem-import-dmabuf FAILED [%d] (hdl: %lx)",
-                      __func__,
-                      getpid(),
-                      import.name,
-                      rc,
-                      import.handle );
-      goto error;
-   }
-
-   vcos_log_trace( "[%s]: [%d] [%s]: ioctl mem-import-dmabuf %d (hdl: %lx)",
-                   __func__,
-                   getpid(),
-                   import.name,
-                   rc,
-                   import.handle );
-
-   return import.handle;
-
-error:
-   if ( import.handle )
-   {
-      vcsm_free( import.handle );
-   }
-   return 0;
 }

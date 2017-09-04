@@ -191,7 +191,7 @@ void vcsm_status( VCSM_STATUS_T status, int pid );
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned int vcsm_malloc( unsigned int size, char *name );
+uintptr_t vcsm_malloc( unsigned int size, char *name );
 
 
 /* Allocates a cached block of memory of size 'size' via the vcsm memory
@@ -227,7 +227,7 @@ uintptr_t vcsm_malloc_cache( unsigned int size, VCSM_CACHE_TYPE_T cache, char *n
 ** only for the duration it needs to access the memory data associated with
 ** the opaque handle.
 */
-unsigned int vcsm_malloc_share( uintptr_t handle );
+uintptr_t vcsm_malloc_share( uintptr_t handle );
 
 
 /* Resizes a block of memory allocated previously by vcsm_alloc.
@@ -454,8 +454,6 @@ struct vcsm_user_clean_invalid2_s {
 };
 
 int vcsm_clean_invalid2( struct vcsm_user_clean_invalid2_s *s );
-
-unsigned int vcsm_import_dmabuf( int dmabuf, char *name );
 
 #ifdef __cplusplus
 }

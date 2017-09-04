@@ -50,7 +50,7 @@ extern "C" {
 struct egl_image_brcm_vcsm_info {
    unsigned width;
    unsigned height;
-   unsigned int vcsm_handle;
+   uintptr_t vcsm_handle;
 };
 
 #ifndef EGL_BRCM_sane_choose_config
